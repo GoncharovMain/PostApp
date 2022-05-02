@@ -5,7 +5,12 @@ namespace PostApp
         public string SecondName { get; set; }
         public string FirstName { get; set; }
         public string Patronymic { get; set; }
-
+        public Abbreviation()
+        {
+            SecondName = String.Empty;
+            FirstName = String.Empty;
+            Patronymic = String.Empty;
+        }
         public Abbreviation(string secondName, string firstName, string patronymic)
         {
             SecondName = secondName;

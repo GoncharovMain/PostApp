@@ -5,12 +5,26 @@ namespace PostApp
         public int Id { get; set; }
         public Abbreviation Abbreviation { get; set; }
         public string Post { get; set; }
-        public Person(int id, string secondName, string firstName, string patronymic, string post)
-            : this(id, new Abbreviation(secondName, firstName, patronymic), post) { }
 
-        public Person(int id, Abbreviation abbreviation, string post)
+        private Person(int id)
         {
             Id = id;
+            Abbreviation = new Abbreviation();
+            Post = String.Empty;
+        }
+
+        public Person(int id, string secondName, string firstName, string patronymic, string post)
+            : this(id, new Abbreviation(secondName, firstName, patronymic), post) { }
+        public Person(int id, Abbreviation abbreviation, string post) : this(id)
+        {
+            Abbreviation = abbreviation;
+            Post = post;
+        }
+
+        public Person(string secondName, string firstName, string patronymic, string post)
+            : this(new Abbreviation(secondName, firstName, patronymic), post) { }
+        public Person(Abbreviation abbreviation, string post) : this(0)
+        {
             Abbreviation = abbreviation;
             Post = post;
         }
@@ -19,23 +33,16 @@ namespace PostApp
 
         public static implicit operator Person(string person)
         {
-            string[] data = person.Split("-");
+            int indexHyphen = person.IndexOf("-");
 
-            int id = Convert.ToInt32(data[0].Trim());
-            string abbreviation = data[1].Trim();
-            string post = data[2].Trim();
+            if (indexHyphen == -1)
+                throw new Exception($"Does not match signature in \'{person}\'.");
 
-            return new Person(id, abbreviation, post);
-            // int indexHyphen = person.IndexOf("-");
+            string abbreviation = person.Substring(0, indexHyphen);
 
-            // if (indexHyphen == -1)
-            //     throw new Exception($"Does not match signature in \'{person}\'.");
+            string post = person.Substring(indexHyphen + 1, person.Length - indexHyphen - 1);
 
-            // string abbreviation = person.Substring(0, indexHyphen);
-
-            // string post = person.Substring(indexHyphen + 1, person.Length - indexHyphen - 1);
-
-            // return new Person(abbreviation.Trim(), post.Trim());
+            return new Person(abbreviation.Trim(), post.Trim());
         }
 
         public static implicit operator string(Person person) => person.ToString();
