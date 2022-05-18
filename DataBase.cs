@@ -9,7 +9,7 @@ namespace PostApp
             _persons = new List<Person>();
             countIds = 0;
         }
-        public DataBase(string src, bool ignoreHeader = false)
+        public DataBase(string src, bool ignoreHeader = true)
         {
             using (StreamReader reader = new StreamReader(src))
             {
@@ -17,26 +17,14 @@ namespace PostApp
 
                 _persons = new List<Person>();
 
-                if (ignoreHeader)
+                if (!ignoreHeader)
                 {
                     reader?.ReadLine();
                 }
 
                 while ((line = reader?.ReadLine()) != null)
                 {
-                    string[] data = line.Split("-");
-
-
-                    int id = Convert.ToInt32(data[0].Trim());
-
-                    string abbreviation = data[1].Trim();
-
-                    string post = data[2].Trim();
-
-                    Person person = new Person(abbreviation, post);
-                    person.Id = id;
-
-                    _persons.Add(person);
+                    _persons.Add(line);
                 }
 
                 countIds = _persons.Count();
@@ -92,11 +80,11 @@ namespace PostApp
                 }
             }
         }
-        public void Save(string path, bool ignoreHeader = false)
+        public void Save(string path, bool ignoreHeader = true)
         {
             using (StreamWriter writer = new StreamWriter(path))
             {
-                if (ignoreHeader)
+                if (!ignoreHeader)
                 {
                     writer.WriteLine("Id - Abbreviation - Post");
                 }
@@ -139,6 +127,16 @@ namespace PostApp
                     case "7": menuMode = false; break;
                     default: break;
                 }
+            }
+        }
+    }
+    public static class ExtentionEnumerable
+    {
+        public static void Print(this IEnumerable<Person> persons)
+        {
+            foreach (Person person in persons)
+            {
+                Console.WriteLine(person);
             }
         }
     }

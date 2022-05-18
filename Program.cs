@@ -1,15 +1,5 @@
 ﻿namespace PostApp
 {
-    public static class ExtentionEnumerable
-    {
-        public static void Print(this IEnumerable<Person> persons)
-        {
-            foreach (Person person in persons)
-            {
-                Console.WriteLine(person);
-            }
-        }
-    }
     public class Program
     {
         public static void Main()

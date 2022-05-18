@@ -33,16 +33,26 @@ namespace PostApp
 
         public static implicit operator Person(string person)
         {
-            int indexHyphen = person.IndexOf("-");
+            string[] data = person.Split('-');
 
-            if (indexHyphen == -1)
-                throw new Exception($"Does not match signature in \'{person}\'.");
+            if (data.Length == 2)
+            {
+                string abbreviation = data[0].Trim();
+                string post = data[1].Trim();
 
-            string abbreviation = person.Substring(0, indexHyphen);
+                return new Person(abbreviation, post);
+            }
 
-            string post = person.Substring(indexHyphen + 1, person.Length - indexHyphen - 1);
+            if (data.Length == 3)
+            {
+                int id = Convert.ToInt32(data[0].Trim());
+                string abbreviation = data[1].Trim();
+                string post = data[2].Trim();
 
-            return new Person(abbreviation.Trim(), post.Trim());
+                return new Person(id, abbreviation, post);
+            }
+
+            throw new Exception($"Does not match signature in \'{person}\'.");
         }
 
         public static implicit operator string(Person person) => person.ToString();
